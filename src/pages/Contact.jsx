@@ -31,7 +31,10 @@ const Contact = () => {
         transition={{ duration: 2, ease: "easeOut" }}
         className="max-w-3xl w-1/2 bg-[#1f1f1f] rounded-xl shadow-lg p-10"
       >
-        <h2 className="text-4xl font-semibold text-amber-400 mb-6 tracking-wide">
+        <h2
+          className="text-4xl font-semibold text-amber-400 mb-6 tracking-wide"
+          id="contact-section"
+        >
           Get in Touch
         </h2>
         <p className="mb-8 text-gray-400 leading-relaxed">

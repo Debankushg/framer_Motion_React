@@ -33,18 +33,20 @@ export default function ScrollToggle() {
       ref={containerRef}
       className="flex h-auto bg-[#242424] overflow-hidden py-10 relative"
     >
-      <div className=" w-1/2 p-10 min-h-screen relative ">
+      <div className=" w-1/2 p-10 min-h-screen relative  text-right">
         <AnimatePresence>
           {show && (
-            <motion.img
-              src="/cofeeMug.png"
-              alt="Image"
-              className="w-full h-180 my-[10%]"
-              initial={{ opacity: 0, x: 0, y: 100 }}
-              animate={{ opacity: 1, x: 0, y: -50 }}
-              exit={{ opacity: 0, x: 0, y: 100 }}
-              transition={{ duration: 2, ease: "easeInOut" }}
-            />
+            <>
+              <motion.img
+                src="/cofeeMug.png"
+                alt="Image"
+                className="w-full h-auto my-[10%]"
+                initial={{ opacity: 0, x: 0, y: 100 }}
+                animate={{ opacity: 1, x: 0, y: -50 }}
+                exit={{ opacity: 0, x: 0, y: 100 }}
+                transition={{ duration: 2, ease: "easeInOut" }}
+              />
+            </>
           )}
         </AnimatePresence>
       </div>
