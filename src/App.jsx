@@ -7,17 +7,19 @@ import About from "./pages/About";
 import Footer from "./pages/Footer";
 import Services from "./pages/Services";
 import { ConfigProvider, theme } from "antd";
+import TimeoutModal from "./components/TimeoutModal";
 
 const App = () => {
   return (
     <>
       <ConfigProvider
-        theme={{
-          algorithm: theme.darkAlgorithm,
-        }}
+      // theme={{
+      //   algorithm: theme.darkAlgorithm,
+      // }}
       >
         <BrowserRouter>
           <Navbar />
+
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
@@ -25,6 +27,7 @@ const App = () => {
           </Routes>
           <Footer />
         </BrowserRouter>
+        <TimeoutModal />
       </ConfigProvider>
     </>
   );
