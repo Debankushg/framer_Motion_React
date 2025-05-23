@@ -2,37 +2,17 @@ import React, { useState } from "react";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import * as motion from "motion/react-client";
 
-const Navbar = () => {
+const Navbar = ({ setToken }) => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [isActives, setIsActive] = useState(false);
+  const token = JSON.parse(localStorage.getItem("user"))?.token;
 
-  const handleContactClick = (e) => {
-    e.preventDefault();
-
-    if (location.pathname !== "/") {
-      // Navigate to Home first, then scroll after page loads
-      setIsActive(false);
-      navigate("/", { replace: false });
-      // Scroll after small delay so page has loaded
-      setTimeout(() => {
-        const contact = document.getElementById("contact-section");
-        if (contact) {
-          contact.scrollIntoView({ behavior: "smooth" });
-        }
-      }, 100);
-    } else {
-      // Already on Home, just scroll
-      const contact = document.getElementById("contact-section");
-      if (contact) {
-        contact.scrollIntoView({ behavior: "smooth" });
-        setIsActive(true);
-      }
-    }
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    navigate("/login");
+    setToken(null);
   };
-
-  console.log(isActives, "isActives");
 
   return (
     <nav className="bg-[#242424] text-white px-6 py-4 flex justify-between items-center shadow-md sticky top-0 z-50">
@@ -74,15 +54,21 @@ const Navbar = () => {
         >
           Services
         </NavLink>
-        <NavLink
-          to="/#contact-section"
-          onClick={handleContactClick}
-          className={
-            isActives ? "text-amber-400 font-semibold" : "hover:text-amber-400"
-          }
-        >
-          Contact
-        </NavLink>
+        {token ? (
+          <button
+            onClick={handleLogout}
+            className="bg-amber-500 ,font-semibold text-#242424 py-1.5 px-4 rounded hover:bg-amber-700 cursor-pointer"
+          >
+            Logout
+          </button>
+        ) : (
+          <NavLink
+            to="/login"
+            className="bg-amber-500 ,font-semibold text-#242424 py-1.5 px-4 rounded hover:bg-amber-700 cursor-pointer"
+          >
+            Login
+          </NavLink>
+        )}
       </div>
     </nav>
   );
