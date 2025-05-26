@@ -1,0 +1,21 @@
+# Ignore node_modules in both Client and Server
+Client/node_modules/
+Server/node_modules/
+
+# Ignore lock files
+Client/package-lock.json
+Server/package-lock.json
+
+# Ignore environment files (optional but recommended)
+Client/.env
+Server/.env
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Optional: Ignore build or dist folders if any
+Client/dist/
+Server/dist/
+Client/build/
+Server/build/
