@@ -6,25 +6,21 @@ import Home from "./pages/Home";
 import About from "./pages/About";
 import Services from "./pages/Services";
 import Login from "./pages/Auth/Login";
+import Registration from "./pages/Auth/Registration";
 import Dashboard from "./pages/Private/Dashboard";
 import IdleTimerComponent from "./components/IdleTimeOut";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 const App = () => {
-  const [token, setToken] = useState(() => {
-    return JSON.parse(localStorage.getItem("user"))?.token || null;
-  });
-
+  const [token, setToken] = useState();
+  const tokens = localStorage.getItem("token");
   // Optional: listen to storage events (e.g., if token cleared in another tab)
   useEffect(() => {
-    const handleStorageChange = () => {
-      setToken(JSON.parse(localStorage.getItem("user"))?.token || null);
-    };
-    window.addEventListener("storage", handleStorageChange);
-    return () => window.removeEventListener("storage", handleStorageChange);
-  }, [localStorage, setToken]);
+    setToken(tokens);
 
-  // You must also update this `setToken(null)` on logout in your logout logic!
+    window.addEventListener("storage", token);
+    return () => window.removeEventListener("storage", token);
+  }, [localStorage, setToken]);
 
   const AppContent = () => (
     <>
@@ -35,6 +31,7 @@ const App = () => {
           path="/login"
           element={<Login onLogin={(tok) => setToken(tok)} />}
         />
+        <Route path="/register" element={<Registration />} />
         <Route path="/about" element={<About />} />
         <Route path="/services" element={<Services />} />
 

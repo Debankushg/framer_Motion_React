@@ -6,12 +6,16 @@ const Navbar = ({ setToken }) => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const token = JSON.parse(localStorage.getItem("user"))?.token;
-
+  const token = localStorage.getItem("token");
   const handleLogout = () => {
     localStorage.removeItem("user");
+    localStorage.removeItem("token");
     navigate("/login");
     setToken(null);
+  };
+
+  const handleRegistration = () => {
+    navigate("/register");
   };
 
   return (
@@ -69,6 +73,13 @@ const Navbar = ({ setToken }) => {
             Login
           </NavLink>
         )}
+
+        <button
+          onClick={handleRegistration}
+          className="bg-amber-500 ,font-semibold text-#242424 py-1.5 px-4 rounded hover:bg-amber-700 cursor-pointer"
+        >
+          Register
+        </button>
       </div>
     </nav>
   );

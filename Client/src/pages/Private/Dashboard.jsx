@@ -1,10 +1,23 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Users, Clock, ClipboardList } from "lucide-react";
 import JobRow from "../../components/JobRow";
 import OpportunityCard from "../../components/OpportunityCard";
 import StatCard from "../../components/StatCard";
+import { getUsers } from "../../service/GetUser";
 
 const Dashboard = () => {
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const users = await getUsers();
+      setUsers(users);
+    };
+    fetchUsers();
+  }, []);
+
+  console.log(users, "users");
+
   return (
     <div className="min-h-screen bg-[#242424] text-amber-50 px-4 py-8 ">
       {/* Stats Sectionss */}

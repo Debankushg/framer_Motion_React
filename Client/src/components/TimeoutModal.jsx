@@ -32,16 +32,16 @@ export const TimeoutModal = ({ onClose, setToken }) => {
   const handleLogout = () => {
     clearInterval(timerRef.current);
     localStorage.removeItem("user");
+    localStorage.removeItem("token");
     navigate("/login");
     setToken(null);
-    console.log("Logged out");
+
     if (onClose) onClose();
     // Your logout logic here
   };
 
   const handleStayLoggedIn = () => {
     clearInterval(timerRef.current); // Stop the timer
-    console.log("Stay logged in");
     setSecondsToGo(appTimeOut.warning); // Reset countdown if you want
     if (onClose) onClose(); // Close modal if parent wants to handle it
   };

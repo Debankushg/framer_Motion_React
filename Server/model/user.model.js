@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const plm = require("passport-local-mongoose");
 
 const userSchema = new mongoose.Schema(
   {
@@ -19,7 +20,7 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
       trim: true,
     },
-    fullName: {
+    fullname: {
       type: String,
       required: true,
       trim: true,
@@ -28,15 +29,21 @@ const userSchema = new mongoose.Schema(
       type: String, // URL as string
       default: "", // optional default
     },
-    posts: {
-      type: [String], // array of strings; you can change this to array of objects if posts have structure
-      default: [],
-    },
+    posts: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Post",
+      },
+    ],
   },
   {
     timestamps: true, // adds createdAt and updatedAt fields automatically
   }
 );
+
+userSchema.plugin(plm, {
+  usernameField: "email",
+});
 
 const User = mongoose.model("User", userSchema);
 

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { loginUser } from "../../service/Auth";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -9,22 +10,32 @@ const Login = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/;
   const isValidPassword = (password) => passwordRegex.test(password);
-  const Usertoken = Math.random().toString(36).substring(2, 15);
+  // const Usertoken = Math.random().toString(36).substring(2, 15);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Add your login logic here
-    console.log({ email, password, rememberMe });
-    if (email && isValidPassword(password) && rememberMe) {
-      toast.success("Login successful");
-      localStorage.setItem(
-        "user",
-        JSON.stringify({ email, password, rememberMe, token: Usertoken })
-      );
-      navigate("/dashboard");
-    } else {
-      toast.error("Invalid email or password");
+  const userLogin = async (data) => {
+    try {
+      const response = await loginUser(data);
+      return response;
+    } catch (error) {
+      throw error;
     }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    // if (email && isValidPassword(password) && rememberMe) {
+    const data = { email, password };
+    const response = await userLogin(data);
+
+    if (response.status === "success") {
+      toast.success("Login successful");
+      navigate("/dashboard");
+      localStorage.setItem("token", response.token);
+      localStorage.setItem("user", JSON.stringify(response.user));
+    } else {
+      toast.error(response?.message);
+    }
+    // }
   };
 
   return (
