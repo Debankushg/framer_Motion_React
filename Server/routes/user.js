@@ -3,6 +3,31 @@ const express = require("express");
 const router = express.Router();
 const userModel = require("../model/user.model");
 const passport = require("passport");
+const localStrategy = require("passport-local");
+
+passport.use(
+  new localStrategy(
+    {
+      usernameField: "email",
+      passwordField: "password",
+    },
+    async (email, password, done) => {
+      try {
+        const user = await userModel.findOne({ email });
+        if (!user) {
+          return done(null, false, { message: "User not found" });
+        }
+        const isPasswordValid = await user.isValidPassword(password);
+        if (!isPasswordValid) {
+          return done(null, false, { message: "Incorrect password" });
+        }
+        return done(null, user);
+      } catch (error) {
+        return done(error);
+      }
+    }
+  )
+);
 
 function isLoggedIn(req, res, next) {
   if (req.isAuthenticated()) return next();

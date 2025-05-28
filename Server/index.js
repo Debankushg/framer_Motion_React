@@ -4,13 +4,15 @@ const cors = require("cors");
 const passport = require("passport");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
-const LocalStrategy = require("passport-local").Strategy;
+const path = require("path");
 
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/user");
+const userProfileRouter = require("./routes/profile");
 const postsRouter = require("./routes/post");
 const getPostRouter = require("./routes/getPost");
-const userModel = require("./model/user.model"); // Import your user model here
+const userModel = require("./model/user.model");
+const uploadImageRoutes = require("./routes/uploadImage");
 
 const app = express();
 
@@ -20,6 +22,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use("/photos", express.static(path.join(__dirname, "photos")));
 
 app.use(
   session({
@@ -42,19 +45,6 @@ passport.use(userModel.createStrategy());
 passport.serializeUser(userModel.serializeUser());
 passport.deserializeUser(userModel.deserializeUser());
 
-// passport.serializeUser((user, done) => {
-//   done(null, user.id); // store user id in session
-// });
-
-// passport.deserializeUser(async (id, done) => {
-//   try {
-//     const user = await userModel.findById(id);
-//     done(null, user); // retrieve user by id and attach to req.user
-//   } catch (err) {
-//     done(err);
-//   }
-// });
-
 // Connect to MongoDB
 mongoose
   .connect("mongodb://localhost:27017/coffeecoder", {
@@ -65,10 +55,12 @@ mongoose
   .catch((err) => console.error("MongoDB connection error:", err));
 
 // Register routes
-app.use("/", indexRouter);
+app.use("/users", indexRouter);
 app.use("/users", usersRouter);
 app.use("/posts", postsRouter);
 app.use("/getPost", getPostRouter);
+app.use("/", userProfileRouter);
+app.use("/", uploadImageRoutes);
 
 // Start server
 const PORT = process.env.PORT || 3000;
