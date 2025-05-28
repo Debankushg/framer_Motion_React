@@ -10,6 +10,7 @@ import Registration from "./pages/Auth/Registration";
 import Dashboard from "./pages/Private/Dashboard";
 import IdleTimerComponent from "./components/IdleTimeOut";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Profile from "./pages/Private/Profile";
 
 const App = () => {
   const [token, setToken] = useState();
@@ -40,6 +41,14 @@ const App = () => {
           element={
             <ProtectedRoute>
               <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
             </ProtectedRoute>
           }
         />

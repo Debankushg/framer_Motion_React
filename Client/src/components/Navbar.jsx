@@ -1,18 +1,52 @@
 import React, { useState } from "react";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import * as motion from "motion/react-client";
+import { DownOutlined, SettingOutlined } from "@ant-design/icons";
+
+import { Dropdown, Space } from "antd";
 
 const Navbar = ({ setToken }) => {
   const location = useLocation();
   const navigate = useNavigate();
-
-  const token = localStorage.getItem("token");
   const handleLogout = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("token");
     navigate("/login");
     setToken(null);
   };
+
+  const items = [
+    {
+      key: "1",
+      label: "My Account",
+      disabled: true,
+    },
+    {
+      type: "divider",
+    },
+    {
+      key: "2",
+      label: "Profile",
+      extra: "⌘P",
+      onClick: () => navigate("/profile"),
+    },
+    {
+      key: "3",
+      label: "Logout",
+      extra: "⌘B",
+      onClick: handleLogout,
+    },
+    {
+      key: "4",
+      label: "Dashboard",
+      icon: <SettingOutlined />,
+      extra: "⌘S",
+      onClick: () => navigate("/dashboard"),
+    },
+  ];
+
+  const token = localStorage.getItem("token");
+  const user = JSON.parse(localStorage.getItem("user"));
 
   const handleRegistration = () => {
     navigate("/register");
@@ -59,12 +93,29 @@ const Navbar = ({ setToken }) => {
           Services
         </NavLink>
         {token ? (
-          <button
-            onClick={handleLogout}
-            className="bg-amber-500 ,font-semibold text-#242424 py-1.5 px-4 rounded hover:bg-amber-700 cursor-pointer"
+          <Dropdown
+            menu={{ items }}
+            placement="bottomRight"
+            trigger={["click"]}
+            icon={<DownOutlined />}
           >
-            Logout
-          </button>
+            <a onClick={(e) => e.preventDefault()}>
+              <Space>
+                <div className="bg-amber-500 ,font-semibold text-#242424   hover:bg-amber-700 cursor-pointer rounded-full">
+                  <img
+                    className="w-[38px] h-[38px] rounded-full"
+                    src={
+                      user?.image
+                        ? user.image
+                        : "https://cdn-icons-png.flaticon.com/512/149/149071.png"
+                    }
+                    alt="User"
+                  />
+                </div>
+                <DownOutlined />
+              </Space>
+            </a>
+          </Dropdown>
         ) : (
           <NavLink
             to="/login"

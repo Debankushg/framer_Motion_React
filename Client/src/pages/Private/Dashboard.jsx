@@ -204,19 +204,19 @@ const Dashboard = () => {
               </thead>
               <tbody>
                 <JobRow
-                  img="/Assets/avatar.svg"
+                  img="/coffee.png"
                   title="Brandy"
                   id="55245872"
                   department="Development"
                 />
                 <JobRow
-                  img="/Assets/avatar.svg"
+                  img="/beans.png"
                   title="Brandy"
                   id="55245872"
                   department="Development"
                 />
                 <JobRow
-                  img="/Assets/avatar.svg"
+                  img="/cofeeMug.png"
                   title="Brandy"
                   id="55245872"
                   department="Development"

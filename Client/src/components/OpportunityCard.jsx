@@ -2,10 +2,10 @@ import React from "react";
 
 const OpportunityCard = ({ title, company, years, salary, location }) => {
   return (
-    <div className="bg-white rounded-lg p-4 space-y-3 border-b border-gray-100">
+    <div className="bg-[#242424] rounded-lg p-4 space-y-3 border-b border-gray-700">
       <h3 className="font-semibold">{title}</h3>
-      <div className="text-sm text-gray-500">by {company}</div>
-      <div className="flex items-center space-x-4 text-sm text-gray-600">
+      <div className="text-sm text-gray-200">by {company}</div>
+      <div className="flex items-center space-x-4 text-sm text-gray-100">
         <div className="flex items-center">
           <svg
             className="w-4 h-4 mr-1"
