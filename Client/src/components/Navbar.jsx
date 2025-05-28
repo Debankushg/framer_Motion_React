@@ -125,12 +125,14 @@ const Navbar = ({ setToken }) => {
           </NavLink>
         )}
 
-        <button
-          onClick={handleRegistration}
-          className="bg-amber-500 ,font-semibold text-#242424 py-1.5 px-4 rounded hover:bg-amber-700 cursor-pointer"
-        >
-          Register
-        </button>
+        {!token && (
+          <button
+            onClick={handleRegistration}
+            className="bg-amber-500 ,font-semibold text-#242424 py-1.5 px-4 rounded hover:bg-amber-700 cursor-pointer"
+          >
+            Register
+          </button>
+        )}
       </div>
     </nav>
   );

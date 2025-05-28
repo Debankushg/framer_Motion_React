@@ -13,6 +13,7 @@ const postsRouter = require("./routes/post");
 const getPostRouter = require("./routes/getPost");
 const userModel = require("./model/user.model");
 const uploadImageRoutes = require("./routes/uploadImage");
+const userInfoRoutes = require("./routes/userInfo");
 
 const app = express();
 
@@ -61,6 +62,7 @@ app.use("/posts", postsRouter);
 app.use("/getPost", getPostRouter);
 app.use("/", userProfileRouter);
 app.use("/", uploadImageRoutes);
+app.use("/user-info", userInfoRoutes);
 
 // Start server
 const PORT = process.env.PORT || 3000;

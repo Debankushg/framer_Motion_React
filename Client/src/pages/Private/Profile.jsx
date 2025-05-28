@@ -41,8 +41,9 @@ const Profile = () => {
   const saveAddress = async (updatedData) => {
     try {
       const savedData = await updateProfile(userId, updatedData);
-      // Update local state with saved data
-      setData(savedData);
+      if (savedData) {
+        fetchData();
+      }
       // Close modal
       closeAddAddressModal();
     } catch (error) {

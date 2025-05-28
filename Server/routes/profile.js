@@ -2,7 +2,6 @@
 const express = require("express");
 const router = express.Router();
 const UserProfile = require("../model/profile.model");
-const User = require("../model/user.model"); // Import your User model
 
 // Create profile
 router.put("/profile/:userId", async (req, res) => {
