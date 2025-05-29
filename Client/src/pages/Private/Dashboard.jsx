@@ -3,14 +3,14 @@ import { Users, Clock, ClipboardList } from "lucide-react";
 import JobRow from "../../components/JobRow";
 import OpportunityCard from "../../components/OpportunityCard";
 import StatCard from "../../components/StatCard";
-import { getUsers } from "../../service/GetUser";
+import { getEmployeeList } from "../../service/appointment";
 
 const Dashboard = () => {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const users = await getUsers();
+      const users = await getEmployeeList();
       setUsers(users);
     };
     fetchUsers();
@@ -198,18 +198,22 @@ const Dashboard = () => {
               <thead>
                 <tr className="border-b border-amber-700">
                   <th className="pb-3 pr-6 text-left">Name</th>
-                  <th className="pb-3 px-6 text-left">Date</th>
+                  <th className="pb-3 px-6 text-left">Company Name</th>
+                  <th className="pb-3 px-6 text-left">Foundation Year</th>
                   <th className="pb-3 px-6 text-left">Department</th>
                 </tr>
               </thead>
               <tbody>
-                <JobRow
-                  img="/coffee.png"
-                  title="Brandy"
-                  id="55245872"
-                  department="Development"
-                />
-                <JobRow
+                {users.map((user) => (
+                  <JobRow
+                    img={user.image}
+                    title={user.employeeName}
+                    companyName={user.companyName}
+                    foundedOn={user.foundationYear}
+                    department={user.department}
+                  />
+                ))}
+                {/* <JobRow
                   img="/beans.png"
                   title="Brandy"
                   id="55245872"
@@ -220,7 +224,7 @@ const Dashboard = () => {
                   title="Brandy"
                   id="55245872"
                   department="Development"
-                />
+                /> */}
               </tbody>
             </table>
           </div>

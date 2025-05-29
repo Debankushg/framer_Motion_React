@@ -48,7 +48,7 @@ export const TimeoutModal = ({ onClose, setToken }) => {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 w-80 shadow-lg text-center">
+      <div className="bg-[#242424] rounded-lg p-6 w-80 shadow-lg text-center">
         <h2 className="text-xl font-semibold mb-4">
           It looks like you’re away!
         </h2>

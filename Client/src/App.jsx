@@ -11,6 +11,9 @@ import Dashboard from "./pages/Private/Dashboard";
 import IdleTimerComponent from "./components/IdleTimeOut";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Profile from "./pages/Private/Profile";
+import Layout from "./layout/Layout";
+import Appointments from "./pages/Private/Appointments";
+import AppointmentList from "./pages/Private/AppointmentList";
 
 const App = () => {
   const [token, setToken] = useState();
@@ -26,6 +29,7 @@ const App = () => {
   const AppContent = () => (
     <>
       <Navbar setToken={setToken} />
+
       <Routes>
         <Route path="/" element={<Home />} />
         <Route
@@ -37,23 +41,48 @@ const App = () => {
         <Route path="/services" element={<Services />} />
 
         <Route
-          path="/dashboard"
+          path="/"
           element={
             <ProtectedRoute>
-              <Dashboard />
+              <Layout />
             </ProtectedRoute>
           }
-        />
-        <Route
-          path="/profile"
-          element={
-            <ProtectedRoute>
-              <Profile />
-            </ProtectedRoute>
-          }
-        />
+        >
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/create-appointment"
+            element={
+              <ProtectedRoute>
+                <Appointments />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/appointments"
+            element={
+              <ProtectedRoute>
+                <AppointmentList />
+              </ProtectedRoute>
+            }
+          />
+        </Route>
       </Routes>
-      <Footer />
+      {!token && <Footer />}
     </>
   );
 

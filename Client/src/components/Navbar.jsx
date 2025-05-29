@@ -119,7 +119,7 @@ const Navbar = ({ setToken }) => {
         ) : (
           <NavLink
             to="/login"
-            className="bg-amber-500 ,font-semibold text-#242424 py-1.5 px-4 rounded hover:bg-amber-700 cursor-pointer"
+            className="bg-amber-500 ,font-semibold text-#242424 py-2.5 px-4 rounded hover:bg-amber-700 cursor-pointer"
           >
             Login
           </NavLink>

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const ProfileImageModal = ({ isOpen, onClose, onSave }) => {
+const ProfileImageModal = ({ isOpen, onClose, onSave, imageUrl }) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
 
@@ -16,7 +16,7 @@ const ProfileImageModal = ({ isOpen, onClose, onSave }) => {
   // Handle save button click
   const handleSave = () => {
     if (selectedFile) {
-      onSave(selectedFile); // Pass the selected file back to parent
+      onSave(selectedFile);
       onClose(); // Close modal after save
     } else {
       alert("Please select an image before saving.");
@@ -41,6 +41,12 @@ const ProfileImageModal = ({ isOpen, onClose, onSave }) => {
                 alt="Preview"
                 className="w-32 h-32 rounded-full object-cover mx-auto"
               />
+            ) : imageUrl ? (
+              <img
+                src={imageUrl}
+                alt="Preview"
+                className="w-32 h-32 rounded-full object-cover mx-auto"
+              />
             ) : (
               <div className="w-32 h-32 rounded-full bg-gray-700 flex items-center justify-center mx-auto text-gray-400 text-center">
                 No image selected
@@ -53,20 +59,20 @@ const ProfileImageModal = ({ isOpen, onClose, onSave }) => {
             type="file"
             accept="image/*"
             onChange={handleFileChange}
-            className="block mx-auto mb-6"
+            className="block mx-auto mb-6 cursor-pointer justify-center bg-amber-500 hover:bg-amber-600 text-white font-semibold py-2 px-4 rounded"
           />
 
           {/* Buttons */}
           <div className="flex justify-end gap-4">
             <button
               onClick={onClose}
-              className="bg-gray-600 hover:bg-gray-700 px-4 py-2 rounded"
+              className="bg-gray-600 hover:bg-gray-700 px-4 py-2 rounded cursor-pointer"
             >
               Cancel
             </button>
             <button
               onClick={handleSave}
-              className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded"
+              className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded cursor-pointer"
             >
               Save
             </button>

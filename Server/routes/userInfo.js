@@ -97,4 +97,27 @@ router.put("/:id", upload.single("employeeImage"), async (req, res) => {
   }
 });
 
+//GET the list of all user info
+router.get("/", async (req, res) => {
+  try {
+    let allUsers = await UserInfo.find();
+    const { search } = req.query;
+
+    if (search) {
+      const searchLower = search.toLowerCase();
+      allUsers = allUsers.filter(
+        (user) =>
+          user.companyName.toLowerCase().includes(searchLower) ||
+          user.employeeName.toLowerCase().includes(searchLower) ||
+          user.department.toLowerCase().includes(searchLower)
+      );
+    }
+    res.json(allUsers);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error fetching user info", error: error.message });
+  }
+});
+
 module.exports = router;

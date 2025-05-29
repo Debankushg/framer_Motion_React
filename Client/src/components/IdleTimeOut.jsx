@@ -60,7 +60,7 @@ const IdleTimerComponent = ({ children, setToken }) => {
     timeout: 1000 * 60 * 20,
     crossTab: true,
     leaderElection: true,
-    syncTimers: 200,
+    syncTimers: 2000,
   });
 
   return (
