@@ -120,4 +120,34 @@ router.get("/", async (req, res) => {
   }
 });
 
+//Delete the user info// DELETE /:id
+router.delete("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const userInfo = await UserInfo.findById(id);
+    if (!userInfo) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Delete the image file if it exists
+    if (userInfo.image) {
+      const imagePath = path.join(
+        __dirname,
+        "../photos",
+        path.basename(userInfo.image)
+      );
+      if (fs.existsSync(imagePath)) fs.unlinkSync(imagePath);
+    }
+
+    await UserInfo.findByIdAndDelete(id);
+
+    res.json({ message: "User deleted successfully" });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error deleting user", error: error.message });
+  }
+});
+
 module.exports = router;

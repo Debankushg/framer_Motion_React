@@ -4,13 +4,15 @@ import JobRow from "../../components/JobRow";
 import OpportunityCard from "../../components/OpportunityCard";
 import StatCard from "../../components/StatCard";
 import { getEmployeeList } from "../../service/appointment";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
   const [users, setUsers] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const users = await getEmployeeList();
+      const users = await getEmployeeList("");
       setUsers(users);
     };
     fetchUsers();
@@ -176,7 +178,10 @@ const Dashboard = () => {
             <h2 className="text-xl font-semibold text-amber-400">
               Recent Applications
             </h2>
-            <button className="text-amber-400 hover:text-amber-300 flex items-center gap-1 font-semibold">
+            <button
+              className="text-amber-400 hover:text-amber-300 flex items-center gap-1 cursor-pointer font-semibold"
+              onClick={() => navigate("/appointments")}
+            >
               View All
               <svg
                 className="w-5 h-5"

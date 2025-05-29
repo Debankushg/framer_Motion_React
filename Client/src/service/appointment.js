@@ -24,3 +24,11 @@ export const getEmployeeList = async (search) => {
   const result = await response.json();
   return result;
 };
+
+export const deleteEmployee = async (id) => {
+  const response = await fetch(`${baseUrl}/user-info/${id}`, {
+    method: "DELETE",
+  });
+  const result = await response.json();
+  return result;
+};

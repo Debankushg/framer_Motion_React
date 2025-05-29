@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
-import { getEmployeeList } from "../../service/appointment";
+import { getEmployeeList, deleteEmployee } from "../../service/appointment";
 
 const AppointmentList = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const [employees, setEmployees] = useState([]);
-  const [empData, setEmpData] = useState({});
   const [search, setSearch] = useState("");
 
   useEffect(() => {
@@ -30,6 +28,16 @@ const AppointmentList = () => {
     try {
       const response = await getEmployeeList(search);
       setEmployees(response);
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteEmployee(id);
+      toast.success("Employee deleted successfully");
+      fetchData("");
     } catch (error) {
       toast.error(error.message);
     }
@@ -72,25 +80,25 @@ const AppointmentList = () => {
         <table className="min-w-full divide-y divide-gray-700">
           <thead className="bg-gray-800">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-md font-medium uppercase tracking-wider">
                 Company
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-md font-medium uppercase tracking-wider">
                 Employee
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-md font-medium uppercase tracking-wider">
                 Foundation Year
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-md font-medium uppercase tracking-wider">
                 Joining Date
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-md font-medium uppercase tracking-wider">
                 Department
               </th>
-              <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">
+              <th className="px-6 py-3 text-center text-md font-medium uppercase tracking-wider">
                 Image
               </th>
-              <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">
+              <th className="px-6 py-3 text-center text-md font-medium uppercase tracking-wider">
                 Actions
               </th>
             </tr>
@@ -100,9 +108,9 @@ const AppointmentList = () => {
               employees.map((data) => (
                 <tr
                   key={data?._id}
-                  className="hover:bg-gray-800 transition-colors duration-200"
+                  className="hover:bg-gray-800 transition-colors duration-200 text-sm"
                 >
-                  <td className="px-6 py-4 whitespace-nowrap font-semibold">
+                  <td className="px-6 py-4 whitespace-nowrap tracking-wider font-semibold">
                     {data?.companyName}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
@@ -133,7 +141,7 @@ const AppointmentList = () => {
                     </button>
                     <button
                       className="bg-red-600 hover:bg-red-700 px-3 py-1 rounded text-sm font-medium transition cursor-pointer"
-                      onClick={() => alert(`Delete ${employeeName}`)}
+                      onClick={() => handleDelete(data?._id)}
                     >
                       Delete
                     </button>
