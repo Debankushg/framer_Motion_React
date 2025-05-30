@@ -9,7 +9,7 @@ const path = require("path");
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/user");
 const userProfileRouter = require("./routes/profile");
-const postsRouter = require("./routes/post");
+const jobPostsRouter = require("./routes/jobPost");
 const getPostRouter = require("./routes/getPost");
 const userModel = require("./model/user.model");
 const uploadImageRoutes = require("./routes/uploadImage");
@@ -58,7 +58,7 @@ mongoose
 // Register routes
 app.use("/users", indexRouter);
 app.use("/users", usersRouter);
-app.use("/posts", postsRouter);
+app.use("/job-posts", jobPostsRouter);
 app.use("/getPost", getPostRouter);
 app.use("/", userProfileRouter);
 app.use("/", uploadImageRoutes);

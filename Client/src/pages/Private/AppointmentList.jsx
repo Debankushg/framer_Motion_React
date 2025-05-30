@@ -2,36 +2,43 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { getEmployeeList, deleteEmployee } from "../../service/appointment";
+import Pagination from "../../components/Pagination";
 
 const AppointmentList = () => {
   const navigate = useNavigate();
   const [employees, setEmployees] = useState([]);
+  const [limit, setLimit] = useState(4);
+  const [offset, setOffset] = useState(0);
   const [search, setSearch] = useState("");
+  const [total, setTotal] = useState(0);
 
-  useEffect(() => {
-    fetchData("");
-  }, []);
+  React.useEffect(() => {
+    fetchData(limit, offset, search);
+  }, [limit, offset]);
 
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
-      fetchData(search);
+      fetchData(limit, offset, search);
     }, 500); // 500ms debounce
 
     return () => clearTimeout(delayDebounce);
-  }, [search]);
+  }, [search, limit, offset]);
 
   const handleEdit = (data) => {
     navigate(`/create-appointment`, { state: { data } });
   };
 
-  const fetchData = async (search) => {
+  const fetchData = async (limit, offset, search) => {
     try {
-      const response = await getEmployeeList(search);
-      setEmployees(response);
+      const response = await getEmployeeList({ limit, offset, search });
+      setEmployees(response?.data);
+      setTotal(response?.totalCount);
     } catch (error) {
       toast.error(error.message);
     }
   };
+
+  // console.log(limit, offset, search, employees, total);
 
   const handleDelete = async (id) => {
     try {
@@ -158,6 +165,13 @@ const AppointmentList = () => {
           </tbody>
         </table>
       </div>
+      <Pagination
+        limit={limit}
+        offset={offset}
+        total={total}
+        onPageChange={setOffset}
+        onLimitChange={setLimit}
+      />
     </div>
   );
 };

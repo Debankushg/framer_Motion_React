@@ -14,6 +14,9 @@ import Profile from "./pages/Private/Profile";
 import Layout from "./layout/Layout";
 import Appointments from "./pages/Private/Appointments";
 import AppointmentList from "./pages/Private/AppointmentList";
+import CreateJobApp from "./pages/Private/CreateJobApp";
+import JobList from "./pages/Private/JobApplications";
+import JobDetails from "./pages/Private/JobDetails";
 
 const App = () => {
   const [token, setToken] = useState();
@@ -77,6 +80,30 @@ const App = () => {
             element={
               <ProtectedRoute>
                 <AppointmentList />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/create-job-post"
+            element={
+              <ProtectedRoute>
+                <CreateJobApp />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/job-applications-list"
+            element={
+              <ProtectedRoute>
+                <JobList />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/job-details/:id"
+            element={
+              <ProtectedRoute>
+                <JobDetails />
               </ProtectedRoute>
             }
           />

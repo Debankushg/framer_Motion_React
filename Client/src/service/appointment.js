@@ -17,9 +17,22 @@ export const createEmployee = async (formData) => {
   return result;
 };
 
-export const getEmployeeList = async (search) => {
+export const getEmployeeList = async ({ limit, offset, search }) => {
+  console.log(limit, offset, search, "uyzgsxcuysgcyugsv");
+
+  const params = new URLSearchParams();
+
+  if (limit !== undefined) params.append("limit", limit);
+  if (offset !== undefined) params.append("offset", offset);
+
+  // Make sure search is a string and not a function
+  if (typeof search === "string" && search.trim() !== "") {
+    params.append("search", search);
+  }
+
+  const queryString = params.toString();
   const response = await fetch(
-    `${baseUrl}/user-info${search && `?search=${search}`}`
+    `${baseUrl}/user-info${queryString ? `?${queryString}` : ""}`
   );
   const result = await response.json();
   return result;

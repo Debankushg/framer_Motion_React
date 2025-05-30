@@ -13,12 +13,10 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       const users = await getEmployeeList("");
-      setUsers(users);
+      setUsers(users?.data);
     };
     fetchUsers();
   }, []);
-
-  console.log(users, "users");
 
   return (
     <div className="min-h-screen bg-[#242424] text-amber-50 px-4 py-8 ">

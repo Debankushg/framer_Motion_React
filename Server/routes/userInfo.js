@@ -100,27 +100,32 @@ router.put("/:id", upload.single("employeeImage"), async (req, res) => {
 //GET the list of all user info
 router.get("/", async (req, res) => {
   try {
-    let allUsers = await UserInfo.find();
-    const { search } = req.query;
+    const { limit, offset, search } = req.query;
 
+    const query = {};
     if (search) {
       const searchLower = search.toLowerCase();
-      allUsers = allUsers.filter(
-        (user) =>
-          user.companyName.toLowerCase().includes(searchLower) ||
-          user.employeeName.toLowerCase().includes(searchLower) ||
-          user.department.toLowerCase().includes(searchLower)
-      );
+      query.$or = [
+        { companyName: { $regex: searchLower, $options: "i" } },
+        { employeeName: { $regex: searchLower, $options: "i" } },
+        { department: { $regex: searchLower, $options: "i" } },
+      ];
     }
-    res.json(allUsers);
+
+    const skip = parseInt(offset) || 0;
+    const lim = parseInt(limit) || 10;
+
+    let allUsers = await UserInfo.find(query).skip(skip).limit(lim);
+    const totalCount = await UserInfo.countDocuments(query);
+    res.json({ data: allUsers, totalCount });
   } catch (error) {
     res
       .status(500)
       .json({ message: "Error fetching user info", error: error.message });
   }
 });
-
 //Delete the user info// DELETE /:id
+
 router.delete("/:id", async (req, res) => {
   try {
     const { id } = req.params;

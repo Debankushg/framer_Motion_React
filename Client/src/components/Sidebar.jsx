@@ -17,8 +17,11 @@ const Sidebar = () => {
         <Link to="/appointments" className="hover:bg-gray-700 p-2 rounded">
           Recent Appointments
         </Link>
-        <Link to="/contact" className="hover:bg-gray-700 p-2 rounded">
-          Contact
+        <Link
+          to="/job-applications-list"
+          className="hover:bg-gray-700 p-2 rounded"
+        >
+          Job Listing
         </Link>
       </nav>
     </div>
