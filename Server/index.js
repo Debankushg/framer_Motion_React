@@ -49,8 +49,8 @@ passport.deserializeUser(userModel.deserializeUser());
 // Connect to MongoDB
 mongoose
   .connect("mongodb://localhost:27017/coffeecoder", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
+    // useNewUrlParser: true,
+    // useUnifiedTopology: true,
   })
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.error("MongoDB connection error:", err));
