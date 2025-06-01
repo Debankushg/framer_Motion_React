@@ -29,25 +29,25 @@ const upload = multer({
 // CREATE new user info (with optional image)
 router.post("/", upload.single("employeeImage"), async (req, res) => {
   try {
-    const {
-      companyName,
-      foundationYear,
-      employeeName,
-      joiningDate,
-      department,
-    } = req.body;
+    // const {
+    //   companyName,
+    //   foundationYear,
+    //   employeeName,
+    //   joiningDate,
+    //   department,
+    // } = req.body;
 
-    const newUserInfo = new UserInfo({
-      companyName,
-      foundationYear,
-      employeeName,
-      joiningDate,
-      department,
-      image: req.file
-        ? `http://localhost:3000/photos/${req.file.filename}`
-        : null,
-    });
-
+    // const newUserInfo = new UserInfo({
+    //   companyName,
+    //   foundationYear,
+    //   employeeName,
+    //   joiningDate,
+    //   department,
+    //   image: req.file
+    //     ? `http://localhost:3000/photos/${req.file.filename}`
+    //     : null,
+    // });
+    const newUserInfo = new UserInfo(req.body);
     await newUserInfo.save();
     res.status(201).json(newUserInfo);
   } catch (error) {
