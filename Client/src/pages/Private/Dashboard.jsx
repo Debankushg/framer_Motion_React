@@ -5,10 +5,12 @@ import OpportunityCard from "../../components/OpportunityCard";
 import StatCard from "../../components/StatCard";
 import { getEmployeeList } from "../../service/appointment";
 import { useNavigate } from "react-router-dom";
+import { appliedCandidateList } from "../../service/Jobs";
 
 const Dashboard = () => {
   const [users, setUsers] = useState([]);
   const navigate = useNavigate();
+  const [appliedCandidate, setAppliedCandidate] = useState([]);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -16,6 +18,14 @@ const Dashboard = () => {
       setUsers(users?.data);
     };
     fetchUsers();
+    const appliedJobList = async () => {
+      const applications = await appliedCandidateList();
+      console.log(applications, "APPLICATion");
+
+      setAppliedCandidate(applications);
+    };
+
+    appliedJobList();
   }, []);
 
   return (
@@ -75,24 +85,27 @@ const Dashboard = () => {
           <table className="w-full table-auto text-amber-50">
             <thead>
               <tr className="border-b border-amber-700">
-                <th className="pb-3 pr-6 text-left">Name</th>
-                <th className="pb-3 px-6 text-left">ID</th>
+                <th className="pb-3 pr-6 text-left">Job Title</th>
+                <th className="pb-3 px-6 text-left">Candidate Name</th>
                 <th className="pb-3 px-6 text-left">Department</th>
-                <th className="pb-3 px-6 text-left">Applied On</th>
-                <th className="pb-3 px-6 text-left">Expires On</th>
-                <th className="pb-3 pl-6 text-left">Status</th>
+                <th className="pb-3 px-6 text-left">Positions</th>
+                <th className="pb-3 px-6 text-left">email</th>
+                <th className="pb-3 pl-6 text-left">Actions</th>
               </tr>
             </thead>
             <tbody>
-              <JobRow
-                title="Full Stack Software Developer"
-                id="55245872"
-                department="Development"
-                appliedOn="12-02-25"
-                expiresOn="30-03-25"
-                status="In Progress"
-              />
-              <JobRow
+              {appliedCandidate?.length > 0 &&
+                appliedCandidate?.map((item) => (
+                  <JobRow
+                    title={item?.jobTitle}
+                    department={item?.department}
+                    email={item?.email}
+                    positions={item?.position}
+                    candidateName={item?.name}
+                    file={item?.file}
+                  />
+                ))}
+              {/* <JobRow
                 title="Full Stack Software Developer"
                 id="55245872"
                 department="Development"
@@ -115,7 +128,7 @@ const Dashboard = () => {
                 appliedOn="05-02-25"
                 expiresOn="20-03-25"
                 status="In Progress"
-              />
+              /> */}
             </tbody>
           </table>
         </section>

@@ -3,14 +3,16 @@ import { useNavigate } from "react-router-dom";
 import { getJobs } from "../../service/Jobs";
 import toast from "react-hot-toast";
 import Pagination from "../../components/Pagination";
+import ApplyJobModal from "../../components/ApplyJobModal";
 
-const JobApplications = ({ onApply }) => {
+const JobApplications = () => {
   const [jobListings, setJobListings] = useState([]);
   const [limit, setLimit] = useState(4);
   const [offset, setOffset] = useState(0);
-  const [sortOrder, setSortOrder] = useState(""); // e.g., 'asc' or 'desc'
+  const [applyModalOpen, setApplyModalOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const [filter, setFilter] = useState(""); // e.g., job type filter like "fulltime"
+  const [filter, setFilter] = useState("");
+  const [jobId, setJobId] = useState("");
 
   const navigate = useNavigate();
 
@@ -21,14 +23,13 @@ const JobApplications = ({ onApply }) => {
     }, 500); // 500ms debounce
 
     return () => clearTimeout(delayDebounce);
-  }, [search, filter, sortOrder, limit, offset]);
+  }, [search, filter, limit, offset]);
 
   const fetchJobListings = async () => {
     try {
       const response = await getJobs({
         search,
         filter,
-        sortOrder,
         limit,
         offset,
       });
@@ -42,6 +43,11 @@ const JobApplications = ({ onApply }) => {
   useEffect(() => {
     fetchJobListings();
   }, []);
+
+  const handleApply = (job) => {
+    setJobId(job);
+    setApplyModalOpen(true);
+  };
 
   return (
     <div className="p-6 max-w-5xl mx-auto bg-[#333333] rounded-lg shadow-md text-white">
@@ -80,6 +86,8 @@ const JobApplications = ({ onApply }) => {
               <option value="">All</option>
               <option value="full-time">Full Time</option>
               <option value="part-time">Part Time</option>
+              <option value="contract">Contractual</option>
+              <option value="internship">Intern</option>
             </select>
           </div>
 
@@ -143,8 +151,8 @@ const JobApplications = ({ onApply }) => {
                   </td>
                   <td className="px-4 py-3 border border-gray-700 text-center">
                     <button
-                      onClick={() => onApply(job._id || job.id)}
-                      className="bg-green-600 hover:bg-green-700 text-white font-semibold px-3 py-1 rounded-md transition"
+                      onClick={() => handleApply(job._id || job.id)}
+                      className="bg-green-600 hover:bg-green-700 text-white font-semibold px-3 py-1 rounded-md transition cursor-pointer"
                     >
                       Apply
                     </button>
@@ -161,6 +169,11 @@ const JobApplications = ({ onApply }) => {
         total={jobListings?.totalCount}
         onPageChange={setOffset}
         onLimitChange={setLimit}
+      />
+      <ApplyJobModal
+        isOpen={applyModalOpen}
+        onClose={() => setApplyModalOpen(false)}
+        jobId={jobId}
       />
     </div>
   );

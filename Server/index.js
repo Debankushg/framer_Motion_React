@@ -14,6 +14,7 @@ const getPostRouter = require("./routes/getPost");
 const userModel = require("./model/user.model");
 const uploadImageRoutes = require("./routes/uploadImage");
 const userInfoRoutes = require("./routes/userInfo");
+const appliedJobList = require("./routes/appliedJobList");
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use("/photos", express.static(path.join(__dirname, "photos")));
+app.use("/documents", express.static(path.join(__dirname, "documents")));
 
 app.use(
   session({
@@ -48,10 +50,7 @@ passport.deserializeUser(userModel.deserializeUser());
 
 // Connect to MongoDB
 mongoose
-  .connect("mongodb://localhost:27017/coffeecoder", {
-    // useNewUrlParser: true,
-    // useUnifiedTopology: true,
-  })
+  .connect("mongodb://localhost:27017/coffeecoder")
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.error("MongoDB connection error:", err));
 
@@ -63,6 +62,7 @@ app.use("/getPost", getPostRouter);
 app.use("/", userProfileRouter);
 app.use("/", uploadImageRoutes);
 app.use("/user-info", userInfoRoutes);
+app.use("/", appliedJobList);
 
 // Start server
 const PORT = process.env.PORT || 3000;

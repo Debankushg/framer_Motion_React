@@ -2,6 +2,30 @@ const express = require("express");
 const router = express.Router();
 const JobPost = require("../model/jobPost.model");
 const User = require("../model/user.model");
+const JobApplication = require("../model/applyJob.model");
+
+const multer = require("multer");
+const path = require("path");
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "./documents"); // You can adjust folder name
+  },
+  filename: (req, file, cb) => {
+    const uniqueName = Date.now() + "-" + file.originalname;
+    cb(null, uniqueName);
+  },
+});
+
+const fileFilter = (req, file, cb) => {
+  const allowed = /pdf|docx?/i;
+  const ext = path.extname(file.originalname).toLowerCase();
+  if (allowed.test(ext)) {
+    cb(null, true);
+  } else {
+    cb(new Error("Only PDF and DOCX files are allowed"));
+  }
+};
 
 // POST create new job post
 router.post("/", async (req, res, next) => {
@@ -102,6 +126,7 @@ router.get("/", async (req, res, next) => {
   }
 });
 
+// Job post details By id
 const mongoose = require("mongoose");
 
 router.get("/:id", async (req, res, next) => {
@@ -119,6 +144,77 @@ router.get("/:id", async (req, res, next) => {
       return res.status(404).json({ error: "Job post not found" });
     }
     res.json(post);
+  } catch (error) {
+    next(error);
+  }
+});
+
+// apply for job post
+const upload = multer({ storage, fileFilter });
+router.post("/apply", upload.single("file"), async (req, res, next) => {
+  try {
+    const data = req.body;
+    const post = await JobPost.findById(data.jobId);
+    if (!post) {
+      return res.status(404).json({ error: "Job post not found" });
+    }
+    if (!req.file) {
+      return res.status(400).json({ message: "No file uploaded" });
+    }
+
+    const docUrl = `http://localhost:3000/documents/${req.file.filename}`;
+    const fileName = req.file.filename;
+    // newApplication.file = docUrl;
+    const newApplication = new JobApplication({
+      ...data,
+      jobId: post._id,
+      file: docUrl,
+      fileName: fileName,
+    });
+
+    await newApplication.save();
+
+    res.status(200).json({
+      message: "Applied successfully",
+      application: {
+        ...newApplication.toObject(),
+        fileName,
+        fileUrl: docUrl,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// applied Job List By user id
+router.get("/appliedJobs/:jobId", async (req, res, next) => {
+  try {
+    const applications = await JobApplication.find({
+      jobId: req.params.jobId,
+    });
+
+    if (!applications) {
+      return res.status(404).json({ error: "Job post not found" });
+    }
+
+    let jobDetails = await JobPost.findById(req.params.jobId)
+      .select("jobTitle position department skills -_id")
+      .populate("department skills") // populate only refs
+      .lean();
+
+    const updatedData = applications.map((application) => {
+      const { jobId, ...rest } = application.toObject(); // exclude jobId here
+      return {
+        ...rest,
+        jobTitle: jobDetails.jobTitle,
+        position: jobDetails.position,
+        department: jobDetails.department,
+        skills: jobDetails.skills,
+      };
+    });
+
+    res.json(updatedData);
   } catch (error) {
     next(error);
   }

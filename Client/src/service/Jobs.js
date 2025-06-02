@@ -36,3 +36,24 @@ export const getJobDetails = async (id) => {
   const result = await response.json();
   return result;
 };
+
+export const applyJob = async (formData) => {
+  const response = await fetch(`${baseUrl}/job-posts/apply`, {
+    method: "POST",
+    body: formData,
+  });
+  const result = await response.json();
+  return result;
+};
+
+export const appliedJobList = async (JobId) => {
+  const response = await fetch(`${baseUrl}/job-posts/appliedJobs/${JobId}`);
+  const result = await response.json();
+  return result;
+};
+
+export const appliedCandidateList = async () => {
+  const response = await fetch(`${baseUrl}/appliedJobs`);
+  const result = await response.json();
+  return result;
+};
