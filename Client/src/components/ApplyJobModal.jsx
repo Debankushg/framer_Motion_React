@@ -63,7 +63,6 @@ const ApplyJobModal = ({ isOpen, onClose, jobId }) => {
       data.append("message", formData.message);
       data.append("file", formData.file);
       data.append("jobId", jobId);
-      console.log("Submitted:", data);
       appliedJobs(data);
       onClose(); // Optionally close the modal
     }

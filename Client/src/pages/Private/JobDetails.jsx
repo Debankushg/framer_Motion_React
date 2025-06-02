@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getJobDetails } from "../../service/Jobs";
+import { toast } from "react-hot-toast";
+import AppliedCandidateList from "../../components/AppliedCandidateList";
 
 const JobDetails = () => {
   const { id } = useParams();
   const [data, setData] = useState(null);
+  const [candidateList, setCandidateList] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -21,6 +25,7 @@ const JobDetails = () => {
         setLoading(false);
       }
     };
+
     if (id) fetchData();
   }, [id]);
 
@@ -53,81 +58,100 @@ const JobDetails = () => {
   });
   return (
     <div className="min-h-screen p-6 bg-[#242424] text-amber-500 font-sans">
-      <div className="max-w-4xl mx-auto bg-[#333333] rounded-lg shadow-lg p-8 space-y-6">
-        {/* Header */}
-        <header className="border-b border-amber-500 pb-4">
-          <h1 className="text-4xl font-bold">{jobTitle}</h1>
-          <p className="mt-1 text-lg">
-            <span className="font-semibold">Position:</span> {position}
-          </p>
-          <p className="text-lg">
-            <span className="font-semibold">Department:</span> {department}
-          </p>
-        </header>
-
-        {/* Job Info */}
-        <section className="grid grid-cols-2 gap-6">
-          <div className="bg-[#242424] p-4 rounded-md border border-amber-500">
-            <h2 className="text-xl font-semibold mb-2">Vacancies</h2>
-            <p className="text-2xl">{vacancies}</p>
-          </div>
-
-          <div className="bg-[#242424] p-4 rounded-md border border-amber-500">
-            <h2 className="text-xl font-semibold mb-2">Closing Date</h2>
-            <p className="text-2xl">{formattedClosingDate}</p>
-          </div>
-        </section>
-
-        {/* Skills */}
-        <section>
-          <h2 className="text-2xl font-semibold mb-3 border-b border-amber-500 pb-2">
-            Required Skills
-          </h2>
-          <ul className="flex flex-wrap gap-3">
-            {skills.map((skill) => (
-              <li
-                key={skill}
-                className="bg-[#242424] px-4 py-2 rounded-full border border-amber-500 text-lg font-medium"
+      {!showModal ? (
+        <div className="max-w-4xl mx-auto bg-[#333333] rounded-lg shadow-lg p-8 space-y-6">
+          {/* Header */}
+          <header className="border-b border-amber-500 pb-4">
+            <div className="flex items-center justify-between">
+              <h1 className="text-4xl font-bold">{jobTitle}</h1>
+              <button
+                className="text-amber-500 p-4 bg-[#242424] rounded-lg cursor-pointer"
+                onClick={() => setShowModal(true)}
               >
-                {skill}
-              </li>
-            ))}
-          </ul>
-        </section>
+                Applied candidates
+              </button>
+            </div>
+            <div>
+              <p className="mt-1 text-lg">
+                <span className="font-semibold">Position:</span> {position}
+              </p>
+              <p className="text-lg">
+                <span className="font-semibold">Department:</span> {department}
+              </p>
+            </div>
+          </header>
 
-        {/* Description */}
-        <section>
-          <h2 className="text-2xl font-semibold mb-3 border-b border-amber-500 pb-2">
-            Job Description
-          </h2>
-          <p className="whitespace-pre-line leading-relaxed">
-            {jobDescription}
-          </p>
-        </section>
+          {/* Job Info */}
+          <section className="grid grid-cols-2 gap-6">
+            <div className="bg-[#242424] p-4 rounded-md border border-amber-500">
+              <h2 className="text-xl font-semibold mb-2">Vacancies</h2>
+              <p className="text-2xl">{vacancies}</p>
+            </div>
 
-        {/* Author and dates */}
-        <footer className="border-t border-amber-500 pt-4 text-sm flex flex-col md:flex-row md:justify-between">
-          <div>
-            <p>
-              <span className="font-semibold">Posted by:</span>{" "}
-              {jobPostAuthor.fullname} (
-              <a
-                href={`mailto:${jobPostAuthor.email}`}
-                className="underline text-amber-400 hover:text-amber-300"
-              >
-                {jobPostAuthor.email}
-              </a>
-              )
+            <div className="bg-[#242424] p-4 rounded-md border border-amber-500">
+              <h2 className="text-xl font-semibold mb-2">Closing Date</h2>
+              <p className="text-2xl">{formattedClosingDate}</p>
+            </div>
+          </section>
+
+          {/* Skills */}
+          <section>
+            <h2 className="text-2xl font-semibold mb-3 border-b border-amber-500 pb-2">
+              Required Skills
+            </h2>
+            <ul className="flex flex-wrap gap-3">
+              {skills.map((skill) => (
+                <li
+                  key={skill}
+                  className="bg-[#242424] px-4 py-2 rounded-full border border-amber-500 text-lg font-medium"
+                >
+                  {skill}
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          {/* Description */}
+          <section>
+            <h2 className="text-2xl font-semibold mb-3 border-b border-amber-500 pb-2">
+              Job Description
+            </h2>
+            <p className="whitespace-pre-line leading-relaxed">
+              {jobDescription}
             </p>
-          </div>
-          <div className="mt-2 md:mt-0">
-            <p>
-              <span className="font-semibold">Posted on:</span>{" "}
-              {formattedCreatedAt}
-            </p>
-          </div>
-        </footer>
-      </div>
+          </section>
+
+          {/* Author and dates */}
+          <footer className="border-t border-amber-500 pt-4 text-sm flex flex-col md:flex-row md:justify-between">
+            <div>
+              <p>
+                <span className="font-semibold">Posted by:</span>{" "}
+                {jobPostAuthor.fullname} (
+                <a
+                  href={`mailto:${jobPostAuthor.email}`}
+                  className="underline text-amber-400 hover:text-amber-300"
+                >
+                  {jobPostAuthor.email}
+                </a>
+                )
+              </p>
+            </div>
+            <div className="mt-2 md:mt-0">
+              <p>
+                <span className="font-semibold">Posted on:</span>{" "}
+                {formattedCreatedAt}
+              </p>
+            </div>
+          </footer>
+        </div>
+      ) : (
+        <AppliedCandidateList
+          position={position}
+          setShowModal={setShowModal}
+          department={department}
+          jobTitle={jobTitle}
+        />
+      )}
     </div>
   );
 };

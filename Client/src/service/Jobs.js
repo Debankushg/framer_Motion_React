@@ -30,8 +30,6 @@ export const getJobs = async ({ limit, offset, search, filter, sortOrder }) => {
 };
 
 export const getJobDetails = async (id) => {
-  console.log(id);
-
   const response = await fetch(`${baseUrl}/job-posts/${id}`);
   const result = await response.json();
   return result;
@@ -46,8 +44,10 @@ export const applyJob = async (formData) => {
   return result;
 };
 
-export const appliedJobList = async (JobId) => {
-  const response = await fetch(`${baseUrl}/job-posts/appliedJobs/${JobId}`);
+export const appliedJobList = async (JobId, limit, offset) => {
+  const response = await fetch(
+    `${baseUrl}/job-posts/appliedJobs/${JobId}/?limit=${limit}&offset=${offset}`
+  );
   const result = await response.json();
   return result;
 };

@@ -30,28 +30,19 @@ const fileFilter = (req, file, cb) => {
 // POST create new job post
 router.post("/", async (req, res, next) => {
   try {
-    const {
-      jobTitle,
-      position,
-      department,
-      vacancies,
-      closingDate,
-      skills,
-      jobDescription,
-      jobPostAuthor,
-    } = req.body;
+    const data = req.body;
 
     // Basic validation (can improve or move to middleware)
     if (
-      !jobTitle ||
-      !position ||
-      !department ||
-      !vacancies ||
-      !closingDate ||
-      !skills ||
-      !skills.length ||
-      !jobDescription ||
-      !jobPostAuthor
+      !data.jobTitle ||
+      !data.position ||
+      !data.department ||
+      !data.vacancies ||
+      !data.closingDate ||
+      !data.skills ||
+      !data.skills.length ||
+      !data.jobDescription ||
+      !data.jobPostAuthor
     ) {
       return res
         .status(400)
@@ -59,19 +50,10 @@ router.post("/", async (req, res, next) => {
     }
 
     // Create the job post
-    const createdPost = await JobPost.create({
-      jobTitle,
-      position,
-      department,
-      vacancies,
-      closingDate,
-      skills,
-      jobDescription,
-      jobPostAuthor,
-    });
+    const createdPost = await JobPost.create(data);
 
     // Optionally push post ref to user.posts array if exists
-    const user = await User.findById(jobPostAuthor);
+    const user = await User.findById(data.jobPostAuthor);
     if (user) {
       user.posts = user.posts || [];
       user.posts.push(createdPost._id);
@@ -141,7 +123,7 @@ router.get("/:id", async (req, res, next) => {
     );
 
     if (!post) {
-      return res.status(404).json({ error: "Job post not found" });
+      return res.status(404).json({ message: "Job post not found" });
     }
     res.json(post);
   } catch (error) {
@@ -190,21 +172,39 @@ router.post("/apply", upload.single("file"), async (req, res, next) => {
 // applied Job List By user id
 router.get("/appliedJobs/:jobId", async (req, res, next) => {
   try {
-    const applications = await JobApplication.find({
-      jobId: req.params.jobId,
-    });
+    const { limit, offset } = req.query;
 
-    if (!applications) {
-      return res.status(404).json({ error: "Job post not found" });
+    // Parse limit and offset with defaults
+    const lim = parseInt(limit) > 0 ? parseInt(limit) : 10;
+    const skip = parseInt(offset) >= 0 ? parseInt(offset) : 0;
+
+    // Filter to only applications for this jobId
+    const filter = { jobId: req.params.jobId };
+
+    // Count total applications matching filter
+    const totalCount = await JobApplication.countDocuments(filter);
+
+    // Fetch paginated applications with limit and skip
+    const applications = await JobApplication.find(filter)
+      .skip(skip)
+      .limit(lim);
+
+    if (!applications.length) {
+      return res.status(404).json({
+        message: "No applications found for this job",
+        applications: [],
+      });
     }
 
-    let jobDetails = await JobPost.findById(req.params.jobId)
+    // Fetch job details once
+    const jobDetails = await JobPost.findById(req.params.jobId)
       .select("jobTitle position department skills -_id")
-      .populate("department skills") // populate only refs
+      .populate("department skills")
       .lean();
 
+    // Merge job details into applications
     const updatedData = applications.map((application) => {
-      const { jobId, ...rest } = application.toObject(); // exclude jobId here
+      const { jobId, ...rest } = application.toObject();
       return {
         ...rest,
         jobTitle: jobDetails.jobTitle,
@@ -214,7 +214,12 @@ router.get("/appliedJobs/:jobId", async (req, res, next) => {
       };
     });
 
-    res.json(updatedData);
+    res.json({
+      totalCount,
+      limit: lim,
+      offset: skip,
+      applications: updatedData,
+    });
   } catch (error) {
     next(error);
   }

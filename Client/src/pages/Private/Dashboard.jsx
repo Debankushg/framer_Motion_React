@@ -20,8 +20,6 @@ const Dashboard = () => {
     fetchUsers();
     const appliedJobList = async () => {
       const applications = await appliedCandidateList();
-      console.log(applications, "APPLICATion");
-
       setAppliedCandidate(applications);
     };
 
