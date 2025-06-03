@@ -29,24 +29,6 @@ const upload = multer({
 // CREATE new user info (with optional image)
 router.post("/", upload.single("employeeImage"), async (req, res) => {
   try {
-    // const {
-    //   companyName,
-    //   foundationYear,
-    //   employeeName,
-    //   joiningDate,
-    //   department,
-    // } = req.body;
-
-    // const newUserInfo = new UserInfo({
-    //   companyName,
-    //   foundationYear,
-    //   employeeName,
-    //   joiningDate,
-    //   department,
-    //   image: req.file
-    //     ? `http://localhost:3000/photos/${req.file.filename}`
-    //     : null,
-    // });
     const newUserInfo = new UserInfo(req.body);
     await newUserInfo.save();
     res.status(201).json(newUserInfo);
@@ -61,15 +43,12 @@ router.post("/", upload.single("employeeImage"), async (req, res) => {
 router.put("/:id", upload.single("employeeImage"), async (req, res) => {
   try {
     const { id } = req.params;
-    const {
-      companyName,
-      foundationYear,
-      employeeName,
-      joiningDate,
-      department,
-    } = req.body;
+    const data = req.body;
 
-    const userInfo = await UserInfo.findById(id);
+    const userInfo = await UserInfo.findByIdAndUpdate(id, data, {
+      new: true,
+      runValidators: true,
+    });
     if (!userInfo)
       return res.status(404).json({ message: "User info not found" });
 
@@ -77,16 +56,8 @@ router.put("/:id", upload.single("employeeImage"), async (req, res) => {
     if (req.file && userInfo.image) {
       const oldImagePath = path.join(__dirname, "../photos", userInfo.image);
       if (fs.existsSync(oldImagePath)) fs.unlinkSync(oldImagePath);
-    }
-
-    // Update fields
-    userInfo.companyName = companyName ?? userInfo.companyName;
-    userInfo.foundationYear = foundationYear ?? userInfo.foundationYear;
-    userInfo.employeeName = employeeName ?? userInfo.employeeName;
-    userInfo.joiningDate = joiningDate ?? userInfo.joiningDate;
-    userInfo.department = department ?? userInfo.department;
-    if (req.file)
       userInfo.image = `http://localhost:3000/photos/${req.file.filename}`;
+    }
 
     await userInfo.save();
     res.json(userInfo);

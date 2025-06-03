@@ -17,6 +17,7 @@ import AppointmentList from "./pages/Private/AppointmentList";
 import CreateJobApp from "./pages/Private/CreateJobApp";
 import JobList from "./pages/Private/JobApplications";
 import JobDetails from "./pages/Private/JobDetails";
+import TimeCalender from "./pages/Private/TimeCalender";
 
 const App = () => {
   const [token, setToken] = useState();
@@ -104,6 +105,14 @@ const App = () => {
             element={
               <ProtectedRoute>
                 <JobDetails />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/time-calender"
+            element={
+              <ProtectedRoute>
+                <TimeCalender />
               </ProtectedRoute>
             }
           />

@@ -14,6 +14,9 @@ const Sidebar = () => {
         <Link to="/profile" className="hover:bg-gray-700 p-2 rounded">
           Profile
         </Link>
+        <Link to="/time-calender" className="hover:bg-gray-700 p-2 rounded">
+          Time Calender
+        </Link>
         <Link to="/appointments" className="hover:bg-gray-700 p-2 rounded">
           Recent Appointments
         </Link>

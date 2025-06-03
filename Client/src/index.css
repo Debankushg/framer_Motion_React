@@ -23,3 +23,28 @@ body {
   background: #242424;
   min-height: 100vh;
 }
+
+/* styles/globals.css */
+.rbc-event {
+  background: #ffd230 !important;
+  color: #000 !important;
+  border: 2px solid #ffd !important;
+  border-radius: 5px !important;
+  height: auto !important;
+  /* padding: 10px !important; */
+}
+
+.rbc-toolbar button {
+  @apply bg-[#333333] rounded px-3 py-1 hover:bg-gray-300;
+}
+
+.rbc-toolbar button.rbc-active {
+  @apply bg-amber-600 text-white;
+}
+.rbc-btn-group button {
+  @apply bg-[#333333] rounded px-3 py-1 hover:bg-gray-300 text-[#cccccc];
+}
+
+.rbc-btn-group button.rbc-active {
+  @apply bg-amber-600 text-white;
+}

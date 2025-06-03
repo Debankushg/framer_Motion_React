@@ -6,7 +6,7 @@ const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const path = require("path");
 
-const indexRouter = require("./routes/index");
+// const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/user");
 const userProfileRouter = require("./routes/profile");
 const jobPostsRouter = require("./routes/jobPost");
@@ -55,7 +55,7 @@ mongoose
   .catch((err) => console.error("MongoDB connection error:", err));
 
 // Register routes
-app.use("/users", indexRouter);
+// app.use("/users", indexRouter);
 app.use("/users", usersRouter);
 app.use("/job-posts", jobPostsRouter);
 app.use("/getPost", getPostRouter);
