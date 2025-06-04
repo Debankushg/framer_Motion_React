@@ -15,6 +15,7 @@ const userModel = require("./model/user.model");
 const uploadImageRoutes = require("./routes/uploadImage");
 const userInfoRoutes = require("./routes/userInfo");
 const appliedJobList = require("./routes/appliedJobList");
+const calenderData = require("./routes/calenderData");
 
 const app = express();
 
@@ -63,6 +64,7 @@ app.use("/", userProfileRouter);
 app.use("/", uploadImageRoutes);
 app.use("/user-info", userInfoRoutes);
 app.use("/", appliedJobList);
+app.use("/", calenderData);
 
 // Start server
 const PORT = process.env.PORT || 3000;

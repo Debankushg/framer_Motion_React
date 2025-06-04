@@ -38,6 +38,10 @@ body {
   @apply bg-[#333333] rounded px-3 py-1 hover:bg-gray-300;
 }
 
+.rbc-today {
+  background-color: #ffd2307a !important;
+}
+
 .rbc-toolbar button.rbc-active {
   @apply bg-amber-600 text-white;
 }
