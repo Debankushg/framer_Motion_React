@@ -3,6 +3,7 @@ import Card from "../components/Card";
 import * as motion from "motion/react-client";
 import Middle from "./Middle";
 import Contact from "./Contact";
+import TourGuide from "../components/TourGuide";
 
 const Home = () => {
   const part1 = "Welcome to Coffee ";
@@ -21,11 +22,24 @@ const Home = () => {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0 },
   };
+
+  // const pageSteps = [
+  //   {
+  //     target: ".first-step",
+  //     content: "Welcome to the home page!",
+  //   },
+  //   {
+  //     target: ".second-step",
+  //     content: "Here is more info about the home page.",
+  //     onclick: () => console.log("click"),
+  //   },
+  // ];
   return (
     <>
+      {/* <TourGuide steps={pageSteps} /> */}
       <div className="bg-[#242424] h-screen py-10">
         <div className="flex items-center flex-col justify-center h-screen ">
-          <motion.h1 className="text-3xl font-bold text-white p-6">
+          <motion.h1 className="text-3xl font-bold text-white p-6 home-step-2">
             {/* Animate first part */}
             <motion.span
               style={{ display: "inline-block" }}
@@ -55,7 +69,7 @@ const Home = () => {
               Coder to Framer
             </motion.span>
           </motion.h1>
-          <div className="flex items-center justify-center px-24">
+          <div className="flex items-center justify-center px-24 home-step-1">
             <motion.p
               className="text-white p-6"
               initial={{ opacity: 0, y: -50 }}

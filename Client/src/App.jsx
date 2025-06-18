@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation, useNavigate } from "react-router-dom"; // No BrowserRouter here
 import Navbar from "./components/Navbar";
 import Footer from "./pages/Footer";
 import Home from "./pages/Home";
@@ -18,22 +18,96 @@ import CreateJobApp from "./pages/Private/CreateJobApp";
 import JobList from "./pages/Private/JobApplications";
 import JobDetails from "./pages/Private/JobDetails";
 import TimeCalender from "./pages/Private/TimeCalender";
+import Joyride from "react-joyride";
+
+const getStepsForRoute = (path) => {
+  switch (path) {
+    case "/":
+      return [
+        {
+          target: ".home-step-1",
+          content: "Welcome to the Home page! Here's the first step.",
+        },
+        {
+          target: ".home-step-2",
+          content: "This is the second step on the Home page.",
+        },
+      ];
+    case "/about":
+      return [
+        {
+          target: ".about-step-1",
+          content: "Welcome to the About page! Here's the first step.",
+        },
+        {
+          target: ".about-step-2",
+          content: "This is the second step on the About page.",
+        },
+      ];
+    case "/services":
+      return [
+        {
+          target: ".services-step-1",
+          content: "Welcome to the Services page! Here's the first step.",
+        },
+        {
+          target: ".services-step-2",
+          content: "This is the second step on the Services page.",
+        },
+      ];
+    default:
+      return [];
+  }
+};
 
 const App = () => {
   const [token, setToken] = useState();
   const tokens = localStorage.getItem("token");
-  // Optional: listen to storage events (e.g., if token cleared in another tab)
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [runTour, setRunTour] = useState(false);
+  const [steps, setSteps] = useState(getStepsForRoute(location.pathname));
+
   useEffect(() => {
     setToken(tokens);
+    window.addEventListener("storage", () =>
+      setToken(localStorage.getItem("token"))
+    );
+    return () =>
+      window.removeEventListener("storage", () =>
+        setToken(localStorage.getItem("token"))
+      );
+  }, [tokens]);
 
-    window.addEventListener("storage", token);
-    return () => window.removeEventListener("storage", token);
-  }, [localStorage, setToken]);
+  const handleCallback = (data) => {
+    if (data.status === "finished" || data.status === "skipped") {
+      localStorage.setItem("tourCompleted", true);
+      setRunTour(false);
+    }
+
+    if (data.action === "next") {
+      if (location.pathname === "/") {
+        navigate("/about");
+      } else if (location.pathname === "/about") {
+        navigate("/services");
+      }
+    }
+  };
+
+  useEffect(() => {
+    setSteps(getStepsForRoute(location.pathname));
+  }, [location.pathname]);
 
   const AppContent = () => (
     <>
       <Navbar setToken={setToken} />
-
+      <Joyride
+        steps={steps}
+        run={runTour}
+        continuous={true}
+        showSkipButton={true}
+        callback={handleCallback}
+      />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route
@@ -69,18 +143,18 @@ const App = () => {
             }
           />
           <Route
-            path="/create-appointment"
-            element={
-              <ProtectedRoute>
-                <Appointments />
-              </ProtectedRoute>
-            }
-          />
-          <Route
             path="/appointments"
             element={
               <ProtectedRoute>
                 <AppointmentList />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/create-appointment"
+            element={
+              <ProtectedRoute>
+                <Appointments />
               </ProtectedRoute>
             }
           />
@@ -123,7 +197,7 @@ const App = () => {
   );
 
   return (
-    <BrowserRouter>
+    <>
       {token ? (
         <IdleTimerComponent setToken={setToken}>
           <AppContent />
@@ -131,7 +205,7 @@ const App = () => {
       ) : (
         <AppContent />
       )}
-    </BrowserRouter>
+    </>
   );
 };
 

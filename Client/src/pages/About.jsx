@@ -1,8 +1,20 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import TourGuide from "../components/TourGuide";
 const About = () => {
+  // const pageSteps = [
+  //   {
+  //     target: ".first-step",
+  //     content: "Welcome to the About Page!",
+  //   },
+  //   {
+  //     target: ".second-step",
+  //     content: "Here’s some more info about us.",
+  //   },
+  // ];
   return (
     <div className="bg-[#242424] h-auto  overflow-hidden">
+      {/* <TourGuide steps={pageSteps} /> */}
       <motion.h1
         className="text-3xl font-bold text-white text-center p-6"
         animate={{ scale: [1, 2, 2, 1, 1] }}
@@ -22,7 +34,7 @@ const About = () => {
             transition={{ duration: 2, ease: "easeInOut" }}
           />
         </div>
-        <div className="w-1/2   h-screen text-amber-500 ">
+        <div className="w-1/2   h-screen text-amber-500 about-step-1">
           {" "}
           Lefficitur vehicula. Sed commodo, quam eget rutrum convallis, eros
           mauris gravida quam, id interdum turpis turpis sit amet mi.
@@ -43,7 +55,7 @@ const About = () => {
       </div>
       <div className=" text-amber-500 p-4 h-screen">
         <div className="flex items-center justify-between  px-6  z-10">
-          <div className="w-1/2   h-screen text-amber-500">
+          <div className="w-1/2   h-screen text-amber-500 about-step-2">
             {" "}
             Lefficitur vehicula. Sed commodo, quam eget rutrum convallis, eros{" "}
             mauris gravida quam, id interdum turpis turpis sit amet mi.
